@@ -1,0 +1,191 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.banner {
+  height: 450rpx;
+  width: 100%;
+}
+.banner image {
+  width: 100%;
+  height: 100%;
+}
+.info-section {
+  padding: 30rpx;
+  background: #fff;
+}
+.info-section .title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+.info-section .title-row .name {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+.info-section .title-row .fav-btn {
+  font-size: 28rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 30rpx;
+  background: #f8f8f8;
+}
+.info-section .price-box {
+  color: #ff5a5f;
+  margin: 10rpx 0;
+}
+.info-section .price-box .price {
+  font-size: 40rpx;
+  font-weight: bold;
+}
+.info-section .price-box .unit {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 10rpx;
+}
+.info-section .meta-info {
+  margin-bottom: 20rpx;
+}
+.info-section .meta-info .meta-item {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+.info-section .meta-info .meta-item .meta-label {
+  color: #999;
+  margin-right: 10rpx;
+}
+.info-section .meta-info .meta-item .meta-value {
+  color: #333;
+}
+.info-section .address-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  font-size: 26rpx;
+  color: #666;
+  border-top: 1rpx solid #f5f5f5;
+  margin-top: 20rpx;
+}
+.info-section .address-bar .addr-text {
+  flex: 1;
+  margin-right: 10rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.info-section .address-bar .distance {
+  font-size: 24rpx;
+  color: #007aff;
+  margin-right: 20rpx;
+}
+.info-section .address-bar .nav-btn {
+  font-size: 26rpx;
+  padding: 10rpx 25rpx;
+  border-radius: 30rpx;
+  background: #f0f0f0;
+  color: #333;
+  font-weight: 500;
+}
+.desc-section {
+  padding: 30rpx;
+}
+.desc-section .title {
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+.desc-section .content {
+  line-height: 1.6;
+  color: #666;
+  font-size: 28rpx;
+}
+.room-section {
+  padding: 30rpx;
+  background: #fff;
+  margin-top: 20rpx;
+}
+.room-section .section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  border-left: 8rpx solid #007aff;
+  padding-left: 20rpx;
+}
+.room-section .room-item {
+  display: flex;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.room-section .room-item .room-img {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+}
+.room-section .room-item .room-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.room-section .room-item .room-info .room-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+.room-section .room-item .room-info .room-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+.room-section .room-item .room-info .room-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.room-section .room-item .room-info .room-bottom .room-price {
+  color: #ff5a5f;
+}
+.room-section .room-item .room-info .room-bottom .room-price .symbol {
+  font-size: 24rpx;
+}
+.room-section .room-item .room-info .room-bottom .room-price .num {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+.room-section .room-item .room-info .room-bottom .book-btn {
+  background: #007aff;
+  color: #fff;
+  font-size: 24rpx;
+  padding: 8rpx 30rpx;
+  border-radius: 30rpx;
+}
+.room-section .empty-room {
+  text-align: center;
+  padding: 50rpx;
+  color: #999;
+  font-size: 28rpx;
+}

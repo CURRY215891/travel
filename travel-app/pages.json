@@ -1,0 +1,133 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "旅游首页"
+			}
+		},
+		{
+			"path": "pages/social/social",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/me/me",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/detail/detail",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/post-add/post-add",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/social/post-detail/post-detail",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/my-favorites/my-favorites",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/my-posts/my-posts",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/my-comment/my-comment",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/category-list/category-list",
+			"style": {
+				"navigationBarTitleText": "景点分类"
+			}
+		},
+		{
+			"path": "pages/hotel-detail/hotel-detail",
+			"style": {
+				"navigationBarTitleText": "酒店详情"
+			}
+		},
+		{
+			"path": "pages/food-detail/food-detail",
+			"style": {
+				"navigationBarTitleText": "美食详情"
+			}
+		},
+		{
+			"path": "pages/room-detail/room-detail",
+			"style": {
+				"navigationBarTitleText": "房间详情"
+			}
+		},
+		{
+			"path": "pages/my-bookings/my-bookings",
+			"style": {
+				"navigationBarTitleText": "我的预订"
+			}
+		},
+		{
+			"path": "pages/booking-order/booking-order",
+			"style": {
+				"navigationBarTitleText": "填写订单"
+			}
+		},
+		{
+			"path": "pages/hotel-review/hotel-review",
+			"style": {
+				"navigationBarTitleText": "酒店点评"
+			}
+		}
+	],
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#007AFF",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/tabbar/ly-home01.png",
+				"selectedIconPath": "static/tabbar/ly-home01.png"
+			},
+			{
+				"pagePath": "pages/social/social",
+				"text": "互动",
+				"iconPath": "static/tabbar/ly-ms01.png",
+				"selectedIconPath": "static/tabbar/ly-ms.png"
+			},
+			{
+				"pagePath": "pages/me/me",
+				"text": "我的",
+				"iconPath": "static/tabbar/ly-my01.png",
+				"selectedIconPath": "static/tabbar/ly-my.png"
+			}
+		]
+	}, // 关键修正：在这里添加逗号，分隔tabBar和globalStyle
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+}

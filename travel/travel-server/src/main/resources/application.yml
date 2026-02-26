@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  # --- 新增：上传文件大小限制配置 ---
+  servlet:
+    multipart:
+      max-file-size: 10MB      # 单个文件最大限制 (根据报错，建议设为10MB或更大)
+      max-request-size: 10MB   # 单次请求总大小限制
+  # ---------------------------
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/travel_db?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true

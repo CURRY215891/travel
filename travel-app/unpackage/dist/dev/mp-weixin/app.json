@@ -1,0 +1,61 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/social/social",
+    "pages/me/me",
+    "pages/detail/detail",
+    "pages/post-add/post-add",
+    "pages/social/post-detail/post-detail",
+    "pages/my-favorites/my-favorites",
+    "pages/my-posts/my-posts",
+    "pages/my-comment/my-comment",
+    "pages/category-list/category-list",
+    "pages/hotel-detail/hotel-detail",
+    "pages/food-detail/food-detail",
+    "pages/room-detail/room-detail",
+    "pages/my-bookings/my-bookings",
+    "pages/booking-order/booking-order",
+    "pages/hotel-review/hotel-review"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#007AFF",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabbar/ly-home01.png",
+        "selectedIconPath": "static/tabbar/ly-home01.png"
+      },
+      {
+        "pagePath": "pages/social/social",
+        "text": "互动",
+        "iconPath": "static/tabbar/ly-ms01.png",
+        "selectedIconPath": "static/tabbar/ly-ms.png"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "我的",
+        "iconPath": "static/tabbar/ly-my01.png",
+        "selectedIconPath": "static/tabbar/ly-my.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置将用于计算您距离景点的距离"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+  "usingComponents": {}
+}
