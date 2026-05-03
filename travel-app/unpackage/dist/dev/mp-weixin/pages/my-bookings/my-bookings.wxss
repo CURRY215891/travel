@@ -86,13 +86,25 @@
   color: #ff9800;
 }
 .booking-card .card-header .status-text.status-1 {
-  color: #4caf50;
+  color: #ff9800;
 }
 .booking-card .card-header .status-text.status-2 {
-  color: #999;
+  color: #2196f3;
 }
 .booking-card .card-header .status-text.status-3 {
+  color: #4caf50;
+}
+.booking-card .card-header .status-text.status-4 {
   color: #007aff;
+}
+.booking-card .card-header .status-text.status-5 {
+  color: #999;
+}
+.booking-card .card-header .status-text.status-6 {
+  color: #ff9800;
+}
+.booking-card .card-header .status-text.status-7 {
+  color: #999;
 }
 .booking-card .card-body {
   display: flex;
@@ -161,10 +173,25 @@
   background: #ff5a5f;
   color: #fff;
 }
+.booking-card .card-footer .btn-group .btn.cancel {
+  border: 1rpx solid #ddd;
+  background: #fff;
+  color: #666;
+}
+.booking-card .card-footer .btn-group .btn.refund {
+  border: 1rpx solid #ff9800;
+  background: #fff;
+  color: #ff9800;
+}
 .booking-card .card-footer .btn-group .btn.comment {
   border: 1rpx solid #ff5a5f;
   color: #ff5a5f;
   background: #fff;
+}
+.booking-card .card-footer .btn-group .btn.delete {
+  border: 1rpx solid #999;
+  background: #fff;
+  color: #999;
 }
 .empty-box {
   padding-top: 200rpx;

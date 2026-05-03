@@ -19,6 +19,11 @@ public class User {
 
     private String avatar;
 
+    /**
+     * 用户状态: 0-正常, 1-封禁
+     */
+    private Integer status;
+
     @TableField("create_time")
     private LocalDateTime createTime;
 }

@@ -18,6 +18,9 @@
 					<text class="price">￥{{info.minPrice || info.price || 0}}</text>
 					<text class="unit">/晚起</text>
 				</view>
+				<view class="tags-row" v-if="info.tags">
+					<text class="tag" v-for="(tag, index) in info.tags.split(',')" :key="index">{{tag}}</text>
+				</view>
 			</view>
 			
 			<view class="meta-info">
@@ -96,7 +99,7 @@ export default {
 				url: config.baseUrl + '/hotel-room/list',
 				data: { hotelId: hotelId },
 				success: (res) => {
-					this.roomList = res.data;
+					this.roomList = res.data.list || res.data || [];
 				}
 			});
 		},
@@ -215,6 +218,20 @@ export default {
 		margin: 10rpx 0;
 		.price { font-size: 40rpx; font-weight: bold; }
 		.unit { font-size: 24rpx; color: #999; margin-left: 10rpx; }
+	}
+	.tags-row {
+		display: flex;
+		flex-wrap: wrap;
+		margin-top: 10rpx;
+		.tag {
+			font-size: 20rpx;
+			background: #eef5ff;
+			color: #007aff;
+			padding: 4rpx 12rpx;
+			border-radius: 6rpx;
+			margin-right: 10rpx;
+			margin-bottom: 10rpx;
+		}
 	}
 	.meta-info {
 		margin-bottom: 20rpx;

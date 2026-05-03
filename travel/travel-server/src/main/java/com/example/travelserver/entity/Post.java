@@ -18,6 +18,11 @@ public class Post {
     private Integer likes;
     private LocalDateTime createTime;
     private Integer commentCount;
+    
+    /**
+     * 审核状态: 0-待审核, 1-已通过, 2-已拒绝
+     */
+    private Integer auditStatus;
 
     // 以下两个字段不在 post 表中，用于关联查询展示用户信息
     @TableField(exist = false)

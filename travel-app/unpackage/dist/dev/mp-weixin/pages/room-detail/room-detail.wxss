@@ -97,6 +97,27 @@
   line-height: 1.6;
   display: block;
 }
+.detail-container .desc-section .facility-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.detail-container .desc-section .facility-list .facility-item {
+  width: 50%;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 15rpx;
+  display: flex;
+  align-items: center;
+}
+.detail-container .desc-section .facility-list .facility-item .dot {
+  color: #ff5a5f;
+  margin-right: 10rpx;
+  font-weight: bold;
+}
+.detail-container .desc-section .no-data {
+  font-size: 26rpx;
+  color: #999;
+}
 .detail-container .comment-section {
   background: #fff;
   padding: 30rpx;

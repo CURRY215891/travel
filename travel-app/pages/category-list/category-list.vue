@@ -80,6 +80,11 @@ export default {
 			return ' /人起';
 		},
 		getTags(item) {
+			// 如果数据库里有 tags 字段，优先使用它
+			if (item.tags) {
+				return item.tags.split(',').filter(t => t.trim() !== '');
+			}
+			// 否则使用默认的兜底数据
 			if (item.categoryId === 4) return ['老字号', '必吃榜'];
 			if (item.categoryId === 2) return ['交通便利', '环境舒适'];
 			if (item.categoryId === 1) return ['历史名胜', '文化底蕴'];

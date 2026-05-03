@@ -42,4 +42,7 @@ public class Attraction {
 
     @TableField("viewCount")
     private Integer viewCount;
+
+    @TableField(exist = false)
+    private String categoryName;
 }

@@ -14,12 +14,22 @@
 				</view>
 			</view>
 			
-			<view class="room-tags" v-if="roomInfo.bedType || roomInfo.area">
-				<text class="tag">{{roomInfo.bedType || '大床'}}</text>
-				<text class="tag">{{roomInfo.area || '25'}}㎡</text>
-				<text class="tag">含早餐</text>
-				<text class="tag">免费WiFi</text>
+			<view class="room-tags" v-if="roomInfo.bedType || roomInfo.area || roomInfo.window">
+				<text class="tag" v-if="roomInfo.bedType">{{roomInfo.bedType}}</text>
+				<text class="tag" v-if="roomInfo.area">{{roomInfo.area}}㎡</text>
+				<text class="tag" v-if="roomInfo.window">{{roomInfo.window}}</text>
 			</view>
+		</view>
+
+		<view class="desc-section">
+			<view class="title">配套设施</view>
+			<view class="facility-list" v-if="roomInfo.facilities">
+				<view class="facility-item" v-for="(item, index) in roomInfo.facilities.split(',')" :key="index">
+					<text class="dot">·</text>
+					<text>{{item}}</text>
+				</view>
+			</view>
+			<view v-else class="no-data">暂无设施信息</view>
 		</view>
 
 		<view class="desc-section">
@@ -212,6 +222,20 @@ export default {
 		margin-bottom: 20rpx;
 		.title { font-size: 32rpx; font-weight: bold; color: #333; margin-bottom: 20rpx; }
 		.content { font-size: 28rpx; color: #666; line-height: 1.6; display: block; }
+		.facility-list {
+			display: flex;
+			flex-wrap: wrap;
+			.facility-item {
+				width: 50%;
+				font-size: 26rpx;
+				color: #666;
+				margin-bottom: 15rpx;
+				display: flex;
+				align-items: center;
+				.dot { color: #ff5a5f; margin-right: 10rpx; font-weight: bold; }
+			}
+		}
+		.no-data { font-size: 26rpx; color: #999; }
 	}
 
 	.comment-section {

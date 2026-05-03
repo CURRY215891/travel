@@ -1,0 +1,179 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.payment-container {
+  min-height: 100vh;
+  background: #f8f8f8;
+  padding-bottom: 120rpx;
+}
+.header {
+  background: #fff;
+  padding: 60rpx 30rpx 40rpx;
+  text-align: center;
+}
+.header .icon-box {
+  margin-bottom: 20rpx;
+}
+.header .icon-box .icon {
+  font-size: 80rpx;
+}
+.header .title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+.order-info {
+  background: #fff;
+  margin-top: 20rpx;
+  padding: 30rpx;
+}
+.order-info .info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.order-info .info-row:last-child {
+  border-bottom: none;
+}
+.order-info .info-row.total {
+  padding-top: 30rpx;
+  margin-top: 10rpx;
+  border-top: 2rpx dashed #f5f5f5;
+  border-bottom: none;
+}
+.order-info .info-row .label {
+  font-size: 28rpx;
+  color: #666;
+}
+.order-info .info-row .value {
+  font-size: 28rpx;
+  color: #333;
+}
+.order-info .info-row .price {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ff5a5f;
+}
+.pay-methods {
+  background: #fff;
+  margin-top: 20rpx;
+  padding: 30rpx;
+}
+.pay-methods .section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+.pay-methods .method-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx 20rpx;
+  border: 2rpx solid #f5f5f5;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+.pay-methods .method-item:last-child {
+  margin-bottom: 0;
+}
+.pay-methods .method-item.active {
+  border-color: #ff5a5f;
+  background: #fff5f5;
+}
+.pay-methods .method-item .method-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+}
+.pay-methods .method-item .method-name {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+}
+.pay-methods .method-item .radio {
+  width: 36rpx;
+  height: 36rpx;
+  border: 2rpx solid #ddd;
+  border-radius: 50%;
+}
+.pay-methods .method-item .radio.checked {
+  background: #ff5a5f;
+  border-color: #ff5a5f;
+  position: relative;
+}
+.pay-methods .method-item .radio.checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16rpx;
+  height: 16rpx;
+  background: #fff;
+  border-radius: 50%;
+}
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+.bottom-bar .total-info {
+  flex: 1;
+}
+.bottom-bar .total-info .label {
+  font-size: 28rpx;
+  color: #333;
+}
+.bottom-bar .total-info .symbol {
+  font-size: 24rpx;
+  color: #ff5a5f;
+}
+.bottom-bar .total-info .price {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #ff5a5f;
+}
+.bottom-bar .pay-btn {
+  width: 240rpx;
+  height: 80rpx;
+  background: #ff5a5f;
+  color: #fff;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+.bottom-bar .pay-btn.disabled {
+  background: #ccc;
+}

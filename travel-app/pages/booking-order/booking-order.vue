@@ -52,7 +52,9 @@
 				<text class="symbol">￥</text>
 				<text class="price">{{totalPrice}}</text>
 			</view>
-			<view class="submit-btn" @click="submitBooking">提交订单</view>
+			<view class="submit-btn" @click="submitBooking" :class="{ disabled: submitting }">
+				{{ submitting ? '提交中...' : '提交订单' }}
+			</view>
 		</view>
 	</view>
 </template>
@@ -79,7 +81,8 @@ export default {
 			},
 			totalPrice: '0.00',
 			days: 0,
-			startDate: ''
+			startDate: '',
+			submitting: false
 		}
 	},
 	onLoad(options) {
@@ -162,7 +165,7 @@ export default {
 				return uni.showToast({ title: '请先登录', icon: 'none' });
 			}
 
-			uni.showLoading({ title: '提交中...' });
+			this.submitting = true;
 			
 			uni.request({
 				url: config.baseUrl + '/booking/add',
@@ -175,22 +178,20 @@ export default {
 					checkOutDate: this.bookingForm.checkOutDate,
 					totalPrice: this.totalPrice,
 					userName: this.bookingForm.userName,
-					userPhone: this.bookingForm.userPhone,
-					status: 1
+					userPhone: this.bookingForm.userPhone
 				},
 				success: (res) => {
-					uni.hideLoading();
-					if (res.data === true) {
-						uni.showToast({ title: '预订成功' });
-						setTimeout(() => {
-							uni.navigateTo({ url: '/pages/my-bookings/my-bookings' });
-						}, 1500);
+					this.submitting = false;
+					if (res.data && res.data.success) {
+						uni.redirectTo({
+							url: `/pages/payment/payment?bookingId=${res.data.bookingId}&roomName=${encodeURIComponent(this.roomInfo.name)}&checkInDate=${this.bookingForm.checkInDate}&checkOutDate=${this.bookingForm.checkOutDate}&userName=${encodeURIComponent(this.bookingForm.userName)}&totalPrice=${this.totalPrice}`
+						});
 					} else {
-						uni.showToast({ title: '该时间段房间已被预订', icon: 'none' });
+						uni.showToast({ title: res.data.message || '该时间段房间已被预订', icon: 'none' });
 					}
 				},
 				fail: () => {
-					uni.hideLoading();
+					this.submitting = false;
 					uni.showToast({ title: '提交失败', icon: 'none' });
 				}
 			});
@@ -308,6 +309,9 @@ export default {
 		justify-content: center;
 		font-size: 30rpx;
 		font-weight: bold;
+		&.disabled {
+			background: #ccc;
+		}
 	}
 }
 </style>

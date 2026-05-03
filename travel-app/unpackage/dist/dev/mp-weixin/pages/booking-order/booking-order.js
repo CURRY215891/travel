@@ -20,11 +20,12 @@ const _sfc_main = {
       },
       totalPrice: "0.00",
       days: 0,
-      startDate: ""
+      startDate: "",
+      submitting: false
     };
   },
   onLoad(options) {
-    common_vendor.index.__f__("log", "at pages/booking-order/booking-order.vue:86", "booking-order onLoad:", options);
+    common_vendor.index.__f__("log", "at pages/booking-order/booking-order.vue:89", "booking-order onLoad:", options);
     if (options.roomId) {
       this.roomId = options.roomId;
       this.getRoomDetail();
@@ -43,14 +44,14 @@ const _sfc_main = {
       common_vendor.index.request({
         url: utils_config.config.baseUrl + "/hotel-room/" + this.roomId,
         success: (res) => {
-          common_vendor.index.__f__("log", "at pages/booking-order/booking-order.vue:106", "room detail:", res.data);
+          common_vendor.index.__f__("log", "at pages/booking-order/booking-order.vue:109", "room detail:", res.data);
           if (res.data) {
             this.roomInfo = res.data;
             this.totalPrice = Number(res.data.price).toFixed(2);
           }
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/booking-order/booking-order.vue:113", "getRoomDetail fail:", err);
+          common_vendor.index.__f__("error", "at pages/booking-order/booking-order.vue:116", "getRoomDetail fail:", err);
         }
       });
     },
@@ -99,7 +100,7 @@ const _sfc_main = {
       if (!user || !user.id) {
         return common_vendor.index.showToast({ title: "请先登录", icon: "none" });
       }
-      common_vendor.index.showLoading({ title: "提交中..." });
+      this.submitting = true;
       common_vendor.index.request({
         url: utils_config.config.baseUrl + "/booking/add",
         method: "POST",
@@ -111,22 +112,20 @@ const _sfc_main = {
           checkOutDate: this.bookingForm.checkOutDate,
           totalPrice: this.totalPrice,
           userName: this.bookingForm.userName,
-          userPhone: this.bookingForm.userPhone,
-          status: 1
+          userPhone: this.bookingForm.userPhone
         },
         success: (res) => {
-          common_vendor.index.hideLoading();
-          if (res.data === true) {
-            common_vendor.index.showToast({ title: "预订成功" });
-            setTimeout(() => {
-              common_vendor.index.navigateTo({ url: "/pages/my-bookings/my-bookings" });
-            }, 1500);
+          this.submitting = false;
+          if (res.data && res.data.success) {
+            common_vendor.index.redirectTo({
+              url: `/pages/payment/payment?bookingId=${res.data.bookingId}&roomName=${encodeURIComponent(this.roomInfo.name)}&checkInDate=${this.bookingForm.checkInDate}&checkOutDate=${this.bookingForm.checkOutDate}&userName=${encodeURIComponent(this.bookingForm.userName)}&totalPrice=${this.totalPrice}`
+            });
           } else {
-            common_vendor.index.showToast({ title: "该时间段房间已被预订", icon: "none" });
+            common_vendor.index.showToast({ title: res.data.message || "该时间段房间已被预订", icon: "none" });
           }
         },
         fail: () => {
-          common_vendor.index.hideLoading();
+          this.submitting = false;
           common_vendor.index.showToast({ title: "提交失败", icon: "none" });
         }
       });
@@ -154,7 +153,9 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     o: $data.bookingForm.userPhone,
     p: common_vendor.o(($event) => $data.bookingForm.userPhone = $event.detail.value),
     q: common_vendor.t($data.totalPrice),
-    r: common_vendor.o((...args) => $options.submitBooking && $options.submitBooking(...args))
+    r: common_vendor.t($data.submitting ? "提交中..." : "提交订单"),
+    s: common_vendor.o((...args) => $options.submitBooking && $options.submitBooking(...args)),
+    t: $data.submitting ? 1 : ""
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);

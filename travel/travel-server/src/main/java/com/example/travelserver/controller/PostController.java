@@ -1,12 +1,14 @@
 package com.example.travelserver.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.travelserver.entity.Post;
 import com.example.travelserver.entity.PostComment;
 import com.example.travelserver.entity.PostLike;
 import com.example.travelserver.entity.UserFavorite;
 import com.example.travelserver.mapper.PostCommentMapper;
 import com.example.travelserver.mapper.PostLikeMapper;
+import com.example.travelserver.mapper.PostMapper;
 import com.example.travelserver.mapper.UserFavoriteMapper;
 import com.example.travelserver.service.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/post")
@@ -32,6 +36,9 @@ public class PostController {
 
     @Autowired
     private UserFavoriteMapper userFavoriteMapper;
+
+    @Autowired
+    private PostMapper postMapper;
 
     // 获取所有动态（带用户信息）
     @GetMapping("/list")
@@ -123,6 +130,68 @@ public class PostController {
     public boolean add(@RequestBody Post post) {
         post.setCreateTime(LocalDateTime.now());
         if (post.getLikes() == null) post.setLikes(0);
+        if (post.getAuditStatus() == null) post.setAuditStatus(1); // 默认直接通过
         return postService.save(post);
+    }
+
+    // ==================== 超级管理员内容审核接口 ====================
+
+    /**
+     * 获取所有动态（包含待审核的）- 分页
+     */
+    @GetMapping("/admin/list")
+    public Map<String, Object> adminList(
+            @RequestParam(required = false) Integer auditStatus,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        List<Post> allPosts = postMapper.selectAllPostWithUser();
+        if (auditStatus != null) {
+            allPosts = allPosts.stream().filter(p -> auditStatus.equals(p.getAuditStatus())).collect(java.util.stream.Collectors.toList());
+        }
+        
+        int total = allPosts.size();
+        int fromIndex = Math.min((page - 1) * pageSize, total);
+        int toIndex = Math.min(fromIndex + pageSize, total);
+        
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", allPosts.subList(fromIndex, toIndex));
+        result.put("total", total);
+        
+        return result;
+    }
+
+    /**
+     * 审核通过动态
+     */
+    @PostMapping("/audit/approve/{id}")
+    public boolean approvePost(@PathVariable Long id) {
+        Post post = postService.getById(id);
+        if (post != null) {
+            post.setAuditStatus(1);
+            return postService.updateById(post);
+        }
+        return false;
+    }
+
+    /**
+     * 审核拒绝动态
+     */
+    @PostMapping("/audit/reject/{id}")
+    public boolean rejectPost(@PathVariable Long id) {
+        Post post = postService.getById(id);
+        if (post != null) {
+            post.setAuditStatus(2);
+            return postService.updateById(post);
+        }
+        return false;
+    }
+
+    /**
+     * 管理员删除动态
+     */
+    @DeleteMapping("/admin/{id}")
+    @Transactional
+    public boolean adminDelete(@PathVariable Long id) {
+        return delete(id);
     }
 }

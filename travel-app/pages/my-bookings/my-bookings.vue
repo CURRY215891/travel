@@ -39,8 +39,10 @@
 					<view class="btn-group">
 						<button v-if="item.status === 0" class="btn pay" @click="handlePay(item.id)">立即支付</button>
 						<button v-if="item.status === 0" class="btn cancel" @click="handleCancel(item.id)">取消订单</button>
-						<button v-if="item.status === 1" class="btn" @click="handleComplete(item.id)">确认入住</button>
-						<button v-if="item.status === 3" class="btn comment" @click="goComment(item)">去评价</button>
+						<button v-if="item.status === 1 || item.status === 2" class="btn cancel" @click="handleCancel(item.id)">取消订单</button>
+						<button v-if="item.status === 1 || item.status === 2" class="btn refund" @click="handleApplyRefund(item.id)">申请退款</button>
+						<button v-if="item.status === 4" class="btn comment" @click="goComment(item)">去评价</button>
+						<button v-if="item.status === 4 || item.status === 5 || item.status === 7" class="btn delete" @click="handleUserDelete(item.id)">删除订单</button>
 					</view>
 				</view>
 			</view>
@@ -59,12 +61,14 @@ import config from '../../utils/config.js';
 export default {
 	data() {
 		return {
-			currentStatus: -1, // -1: 全部
+			currentStatus: -1,
 			statusTabs: [
 				{ name: '全部', status: -1 },
 				{ name: '待支付', status: 0 },
-				{ name: '已支付', status: 1 },
-				{ name: '已完成', status: 3 }
+				{ name: '待确认', status: 1 },
+				{ name: '待入住', status: 2 },
+				{ name: '已入住', status: 3 },
+				{ name: '已完成', status: 4 }
 			],
 			bookings: []
 		}
@@ -112,28 +116,23 @@ export default {
 		getStatusName(status) {
 			const names = {
 				0: '待支付',
-				1: '已支付',
-				2: '已取消',
-				3: '已完成'
+				1: '待确认',
+				2: '待入住',
+				3: '已入住',
+				4: '已完成',
+				5: '已取消',
+				6: '退款中',
+				7: '已退款'
 			};
 			return names[status] || '未知';
 		},
 		handlePay(id) {
-			uni.showLoading({ title: '支付中...' });
-			setTimeout(() => {
-				uni.request({
-					url: config.baseUrl + '/booking/updateStatus',
-					method: 'POST',
-					data: { id: id, status: 1 },
-					success: (res) => {
-						uni.hideLoading();
-						if (res.data) {
-							uni.showToast({ title: '支付成功' });
-							this.loadBookings();
-						}
-					}
-				});
-			}, 1000);
+			const booking = this.bookings.find(b => b.id === id);
+			if (!booking) return;
+			
+			uni.navigateTo({
+				url: `/pages/payment/payment?bookingId=${id}&roomName=${encodeURIComponent(booking.roomName)}&checkInDate=${booking.checkInDate}&checkOutDate=${booking.checkOutDate}&userName=${encodeURIComponent(booking.userName)}&totalPrice=${booking.totalPrice}`
+			});
 		},
 		handleCancel(id) {
 			uni.showModal({
@@ -142,12 +141,15 @@ export default {
 				success: (res) => {
 					if (res.confirm) {
 						uni.request({
-							url: config.baseUrl + '/booking/' + id,
-							method: 'DELETE',
+							url: config.baseUrl + '/booking/cancel',
+							method: 'POST',
+							data: { id: id },
 							success: (res) => {
-								if (res.data) {
+								if (res.data && res.data.success) {
 									uni.showToast({ title: '订单已取消' });
 									this.loadBookings();
+								} else {
+									uni.showToast({ title: res.data.message || '取消失败', icon: 'none' });
 								}
 							}
 						});
@@ -155,15 +157,48 @@ export default {
 				}
 			});
 		},
-		handleComplete(id) {
-			uni.request({
-				url: config.baseUrl + '/booking/updateStatus',
-				method: 'POST',
-				data: { id: id, status: 3 },
+		handleApplyRefund(id) {
+			uni.showModal({
+				title: '提示',
+				content: '确定要申请退款吗？',
 				success: (res) => {
-					if (res.data) {
-						uni.showToast({ title: '已确认入住' });
-						this.loadBookings();
+					if (res.confirm) {
+						uni.request({
+							url: config.baseUrl + '/booking/apply-refund',
+							method: 'POST',
+							data: { id: id },
+							success: (res) => {
+								if (res.data && res.data.success) {
+									uni.showToast({ title: '已申请退款' });
+									this.loadBookings();
+								} else {
+									uni.showToast({ title: res.data.message || '申请失败', icon: 'none' });
+								}
+							}
+						});
+					}
+				}
+			});
+		},
+		handleUserDelete(id) {
+			uni.showModal({
+				title: '提示',
+				content: '确定要删除订单吗？',
+				success: (res) => {
+					if (res.confirm) {
+						uni.request({
+							url: config.baseUrl + '/booking/user-delete',
+							method: 'POST',
+							data: { id: id },
+							success: (res) => {
+								if (res.data && res.data.success) {
+									uni.showToast({ title: '删除成功' });
+									this.loadBookings();
+								} else {
+									uni.showToast({ title: res.data.message || '删除失败', icon: 'none' });
+								}
+							}
+						});
 					}
 				}
 			});
@@ -210,9 +245,13 @@ export default {
 		.status-text { 
 			font-size: 26rpx;
 			&.status-0 { color: #ff9800; }
-			&.status-1 { color: #4caf50; }
-			&.status-2 { color: #999; }
-			&.status-3 { color: #007aff; }
+			&.status-1 { color: #ff9800; }
+			&.status-2 { color: #2196f3; }
+			&.status-3 { color: #4caf50; }
+			&.status-4 { color: #007aff; }
+			&.status-5 { color: #999; }
+			&.status-6 { color: #ff9800; }
+			&.status-7 { color: #999; }
 		}
 	}
 	
@@ -242,7 +281,10 @@ export default {
 				border-radius: 30rpx; background: #f8f8f8; color: #666;
 				&::after { border: none; }
 				&.pay { background: #ff5a5f; color: #fff; }
+				&.cancel { border: 1rpx solid #ddd; background: #fff; color: #666; }
+				&.refund { border: 1rpx solid #ff9800; background: #fff; color: #ff9800; }
 				&.comment { border: 1rpx solid #ff5a5f; color: #ff5a5f; background: #fff; }
+				&.delete { border: 1rpx solid #999; background: #fff; color: #999; }
 			}
 		}
 	}

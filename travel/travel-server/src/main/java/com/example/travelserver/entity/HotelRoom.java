@@ -19,4 +19,10 @@ public class HotelRoom {
     private BigDecimal price;
     private Integer stock;
     private String description;
+    private String area;
+    @TableField("bed_type")
+    private String bedType;
+    @TableField("`window`")
+    private String window;
+    private String facilities;
 }

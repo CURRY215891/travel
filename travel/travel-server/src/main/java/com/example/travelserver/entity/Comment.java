@@ -36,6 +36,11 @@ public class Comment {
     
     private Integer parentId;
     
+    /**
+     * 审核状态: 0-待审核, 1-已通过, 2-已拒绝
+     */
+    private Integer auditStatus;
+    
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 

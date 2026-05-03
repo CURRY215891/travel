@@ -165,6 +165,8 @@ export default {
 			}
 		},
 		loginByBackend(nickname, avatar) {
+			// 如果已登录，获取本地存储的 userId
+			const existingUser = uni.getStorageSync('userInfo');
 			// 模拟微信登录获取 code
 			uni.login({
 				provider: 'weixin',
@@ -173,9 +175,10 @@ export default {
 						url: config.baseUrl + '/user/login',
 						method: 'POST',
 						data: {
-							code: loginRes.code, // 携带 code 解决同名冲突漏洞
+							code: loginRes.code,
 							nickname: nickname,
-							avatar: avatar
+							avatar: avatar,
+							userId: existingUser && existingUser.id ? existingUser.id : ''
 						},
 						success: (res) => {
 							if (res.statusCode === 200 && res.data && res.data.id) {

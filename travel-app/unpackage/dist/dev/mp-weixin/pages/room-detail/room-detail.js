@@ -42,16 +42,16 @@ const _sfc_main = {
       });
     },
     getComments() {
-      common_vendor.index.__f__("log", "at pages/room-detail/room-detail.vue:137", "Fetching comments for roomId:", this.roomId);
+      common_vendor.index.__f__("log", "at pages/room-detail/room-detail.vue:147", "Fetching comments for roomId:", this.roomId);
       common_vendor.index.request({
         url: utils_config.config.baseUrl + "/comment/attr/" + this.roomId + "?type=3",
         success: (res) => {
-          common_vendor.index.__f__("log", "at pages/room-detail/room-detail.vue:141", "Comments API response:", res);
+          common_vendor.index.__f__("log", "at pages/room-detail/room-detail.vue:151", "Comments API response:", res);
           this.commentList = res.data || [];
-          common_vendor.index.__f__("log", "at pages/room-detail/room-detail.vue:143", "commentList set to:", this.commentList);
+          common_vendor.index.__f__("log", "at pages/room-detail/room-detail.vue:153", "commentList set to:", this.commentList);
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/room-detail/room-detail.vue:146", "Failed to fetch comments:", err);
+          common_vendor.index.__f__("error", "at pages/room-detail/room-detail.vue:156", "Failed to fetch comments:", err);
         }
       });
     },
@@ -86,19 +86,37 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     a: $options.formatImg($data.roomInfo.image),
     b: common_vendor.t($data.roomInfo.name),
     c: common_vendor.t($data.roomInfo.price),
-    d: $data.roomInfo.bedType || $data.roomInfo.area
-  }, $data.roomInfo.bedType || $data.roomInfo.area ? {
-    e: common_vendor.t($data.roomInfo.bedType || "大床"),
-    f: common_vendor.t($data.roomInfo.area || "25")
+    d: $data.roomInfo.bedType || $data.roomInfo.area || $data.roomInfo.window
+  }, $data.roomInfo.bedType || $data.roomInfo.area || $data.roomInfo.window ? common_vendor.e({
+    e: $data.roomInfo.bedType
+  }, $data.roomInfo.bedType ? {
+    f: common_vendor.t($data.roomInfo.bedType)
   } : {}, {
-    g: common_vendor.t($data.roomInfo.description || "暂无详细介绍"),
-    h: $data.commentList.length
+    g: $data.roomInfo.area
+  }, $data.roomInfo.area ? {
+    h: common_vendor.t($data.roomInfo.area)
+  } : {}, {
+    i: $data.roomInfo.window
+  }, $data.roomInfo.window ? {
+    j: common_vendor.t($data.roomInfo.window)
+  } : {}) : {}, {
+    k: $data.roomInfo.facilities
+  }, $data.roomInfo.facilities ? {
+    l: common_vendor.f($data.roomInfo.facilities.split(","), (item, index, i0) => {
+      return {
+        a: common_vendor.t(item),
+        b: index
+      };
+    })
+  } : {}, {
+    m: common_vendor.t($data.roomInfo.description || "暂无详细介绍"),
+    n: $data.commentList.length
   }, $data.commentList.length ? {
-    i: common_vendor.t($data.commentList.length)
+    o: common_vendor.t($data.commentList.length)
   } : {}, {
-    j: !$data.commentList.length
+    p: !$data.commentList.length
   }, !$data.commentList.length ? {} : {
-    k: common_vendor.f($data.commentList, (item, index, i0) => {
+    q: common_vendor.f($data.commentList, (item, index, i0) => {
       return common_vendor.e({
         a: $options.formatImg(item.avatar) || "/static/default-avatar.png",
         b: common_vendor.t(item.nickname || "匿名用户"),
@@ -128,8 +146,8 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       });
     })
   }, {
-    l: common_vendor.t($data.roomInfo.price),
-    m: common_vendor.o((...args) => $options.handleBook && $options.handleBook(...args))
+    r: common_vendor.t($data.roomInfo.price),
+    s: common_vendor.o((...args) => $options.handleBook && $options.handleBook(...args))
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);

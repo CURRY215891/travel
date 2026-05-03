@@ -50,6 +50,7 @@
 				<image class="cover" :src="formatImg(item.mainImage) || 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400'" mode="aspectFill"></image>
 				<view class="info">
 					<text class="name">{{item.name}}</text>
+					<view class="distance" v-if="item.distance">距您 {{item.distance}}</view>
 					<view class="tags">
 						<text class="tag">必打卡</text>
 						<text class="tag">高人气</text>
@@ -85,7 +86,9 @@ export default {
 			currentCity: '定位中...',
 			searchKeyword: '',
 			searchResults: [],
-			showSuggestions: false
+			showSuggestions: false,
+			currentLat: null,
+			currentLng: null
 		}
 	},
 	onLoad() {
@@ -105,17 +108,50 @@ export default {
 			uni.getLocation({
 				type: 'wgs84',
 				success: (res) => {
+					console.log('获取当前位置成功:', res);
+					this.currentLat = res.latitude;
+					this.currentLng = res.longitude;
+					
 					// 在实际开发中，这里通常需要调用高德/腾讯地图的逆地址解析接口
 					// 由于目前是毕设演示，我们模拟一个定位成功的效果
 					// 如果需要真实逆地址解析，可以使用腾讯地图SDK
 					setTimeout(() => {
-						this.currentCity = '邯郸市';
+						this.currentCity = '石家庄市';
 					}, 1000);
+					
+					// 定位成功后重新计算景点距离
+					this.calculateAllDistances();
 				},
 				fail: (err) => {
-					this.currentCity = '邯郸市'; // 模拟失败也默认邯郸
+					this.currentCity = '石家庄市';
 					console.log('定位失败', err);
 				}
+			});
+		},
+		getDistance(lat1, lng1, lat2, lng2) {
+			const radLat1 = lat1 * Math.PI / 180.0;
+			const radLat2 = lat2 * Math.PI / 180.0;
+			const a = radLat1 - radLat2;
+			const b = lng1 * Math.PI / 180.0 - lng2 * Math.PI / 180.0;
+			let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+				Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+			s = s * 6378.137; // 地球半径
+			return s;
+		},
+		calculateAllDistances() {
+			if (!this.currentLat || !this.currentLng) return;
+			
+			this.attractions = this.attractions.map(item => {
+				if (item.latitude && item.longitude) {
+					const dist = this.getDistance(
+						this.currentLat,
+						this.currentLng,
+						parseFloat(item.latitude),
+						parseFloat(item.longitude)
+					);
+					item.distance = dist > 1 ? dist.toFixed(1) + 'km' : (dist * 1000).toFixed(0) + 'm';
+				}
+				return item;
 			});
 		},
 		getAttractions() {
@@ -133,6 +169,9 @@ export default {
 							categoryId: item.categoryId || 1 // 默认景点分类
 						};
 					});
+					
+					// 获取列表后计算距离
+					this.calculateAllDistances();
 				}
 			});
 		},
@@ -289,5 +328,5 @@ export default {
 .banner { height: 350rpx; width: 100%; image { width: 100%; height: 100%; } }
 .category-section { display: flex; background: #fff; padding: 30rpx 0; border-radius: 0 0 30rpx 30rpx; .category-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 24rpx; color: #333; image { width: 80rpx; height: 80rpx; margin-bottom: 10rpx; } } }
 .list-section { padding: 30rpx; .section-title { font-size: 34rpx; font-weight: bold; margin-bottom: 20rpx; color: #333; } }
-.attraction-card { background: #fff; border-radius: 20rpx; overflow: hidden; margin-bottom: 30rpx; display: flex; box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.05); .cover { width: 240rpx; height: 240rpx; } .info { flex: 1; padding: 20rpx; display: flex; flex-direction: column; justify-content: space-between; .name { font-size: 32rpx; font-weight: bold; } .tag { font-size: 20rpx; background: #eef5ff; color: #007aff; padding: 4rpx 12rpx; border-radius: 6rpx; margin-right: 10rpx; } .price-box { color: #ff5a5f; .price { font-size: 36rpx; font-weight: bold; } .unit { font-size: 22rpx; color: #999; margin-left: 4rpx; } } } }
+.attraction-card { background: #fff; border-radius: 20rpx; overflow: hidden; margin-bottom: 30rpx; display: flex; box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.05); .cover { width: 240rpx; height: 240rpx; } .info { flex: 1; padding: 20rpx; display: flex; flex-direction: column; justify-content: space-between; .name { font-size: 32rpx; font-weight: bold; } .distance { font-size: 24rpx; color: #007aff; margin: 8rpx 0; } .tag { font-size: 20rpx; background: #eef5ff; color: #007aff; padding: 4rpx 12rpx; border-radius: 6rpx; margin-right: 10rpx; } .price-box { color: #ff5a5f; .price { font-size: 36rpx; font-weight: bold; } .unit { font-size: 22rpx; color: #999; margin-left: 4rpx; } } } }
 </style>

@@ -6,12 +6,13 @@ const _sfc_main = {
   data() {
     return {
       currentStatus: -1,
-      // -1: 全部
       statusTabs: [
         { name: "全部", status: -1 },
         { name: "待支付", status: 0 },
-        { name: "已支付", status: 1 },
-        { name: "已完成", status: 3 }
+        { name: "待确认", status: 1 },
+        { name: "待入住", status: 2 },
+        { name: "已入住", status: 3 },
+        { name: "已完成", status: 4 }
       ],
       bookings: []
     };
@@ -46,7 +47,7 @@ const _sfc_main = {
             this.bookings = res.data;
           } else {
             this.bookings = [];
-            common_vendor.index.__f__("error", "at pages/my-bookings/my-bookings.vue:100", "加载预订列表失败:", res);
+            common_vendor.index.__f__("error", "at pages/my-bookings/my-bookings.vue:104", "加载预订列表失败:", res);
           }
         },
         fail: (err) => {
@@ -61,28 +62,23 @@ const _sfc_main = {
     getStatusName(status) {
       const names = {
         0: "待支付",
-        1: "已支付",
-        2: "已取消",
-        3: "已完成"
+        1: "待确认",
+        2: "待入住",
+        3: "已入住",
+        4: "已完成",
+        5: "已取消",
+        6: "退款中",
+        7: "已退款"
       };
       return names[status] || "未知";
     },
     handlePay(id) {
-      common_vendor.index.showLoading({ title: "支付中..." });
-      setTimeout(() => {
-        common_vendor.index.request({
-          url: utils_config.config.baseUrl + "/booking/updateStatus",
-          method: "POST",
-          data: { id, status: 1 },
-          success: (res) => {
-            common_vendor.index.hideLoading();
-            if (res.data) {
-              common_vendor.index.showToast({ title: "支付成功" });
-              this.loadBookings();
-            }
-          }
-        });
-      }, 1e3);
+      const booking = this.bookings.find((b) => b.id === id);
+      if (!booking)
+        return;
+      common_vendor.index.navigateTo({
+        url: `/pages/payment/payment?bookingId=${id}&roomName=${encodeURIComponent(booking.roomName)}&checkInDate=${booking.checkInDate}&checkOutDate=${booking.checkOutDate}&userName=${encodeURIComponent(booking.userName)}&totalPrice=${booking.totalPrice}`
+      });
     },
     handleCancel(id) {
       common_vendor.index.showModal({
@@ -91,12 +87,15 @@ const _sfc_main = {
         success: (res) => {
           if (res.confirm) {
             common_vendor.index.request({
-              url: utils_config.config.baseUrl + "/booking/" + id,
-              method: "DELETE",
+              url: utils_config.config.baseUrl + "/booking/cancel",
+              method: "POST",
+              data: { id },
               success: (res2) => {
-                if (res2.data) {
+                if (res2.data && res2.data.success) {
                   common_vendor.index.showToast({ title: "订单已取消" });
                   this.loadBookings();
+                } else {
+                  common_vendor.index.showToast({ title: res2.data.message || "取消失败", icon: "none" });
                 }
               }
             });
@@ -104,15 +103,48 @@ const _sfc_main = {
         }
       });
     },
-    handleComplete(id) {
-      common_vendor.index.request({
-        url: utils_config.config.baseUrl + "/booking/updateStatus",
-        method: "POST",
-        data: { id, status: 3 },
+    handleApplyRefund(id) {
+      common_vendor.index.showModal({
+        title: "提示",
+        content: "确定要申请退款吗？",
         success: (res) => {
-          if (res.data) {
-            common_vendor.index.showToast({ title: "已确认入住" });
-            this.loadBookings();
+          if (res.confirm) {
+            common_vendor.index.request({
+              url: utils_config.config.baseUrl + "/booking/apply-refund",
+              method: "POST",
+              data: { id },
+              success: (res2) => {
+                if (res2.data && res2.data.success) {
+                  common_vendor.index.showToast({ title: "已申请退款" });
+                  this.loadBookings();
+                } else {
+                  common_vendor.index.showToast({ title: res2.data.message || "申请失败", icon: "none" });
+                }
+              }
+            });
+          }
+        }
+      });
+    },
+    handleUserDelete(id) {
+      common_vendor.index.showModal({
+        title: "提示",
+        content: "确定要删除订单吗？",
+        success: (res) => {
+          if (res.confirm) {
+            common_vendor.index.request({
+              url: utils_config.config.baseUrl + "/booking/user-delete",
+              method: "POST",
+              data: { id },
+              success: (res2) => {
+                if (res2.data && res2.data.success) {
+                  common_vendor.index.showToast({ title: "删除成功" });
+                  this.loadBookings();
+                } else {
+                  common_vendor.index.showToast({ title: res2.data.message || "删除失败", icon: "none" });
+                }
+              }
+            });
           }
         }
       });
@@ -159,15 +191,23 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       }, item.status === 0 ? {
         n: common_vendor.o(($event) => $options.handleCancel(item.id), item.id)
       } : {}, {
-        o: item.status === 1
-      }, item.status === 1 ? {
-        p: common_vendor.o(($event) => $options.handleComplete(item.id), item.id)
+        o: item.status === 1 || item.status === 2
+      }, item.status === 1 || item.status === 2 ? {
+        p: common_vendor.o(($event) => $options.handleCancel(item.id), item.id)
       } : {}, {
-        q: item.status === 3
-      }, item.status === 3 ? {
-        r: common_vendor.o(($event) => $options.goComment(item), item.id)
+        q: item.status === 1 || item.status === 2
+      }, item.status === 1 || item.status === 2 ? {
+        r: common_vendor.o(($event) => $options.handleApplyRefund(item.id), item.id)
       } : {}, {
-        s: item.id
+        s: item.status === 4
+      }, item.status === 4 ? {
+        t: common_vendor.o(($event) => $options.goComment(item), item.id)
+      } : {}, {
+        v: item.status === 4 || item.status === 5 || item.status === 7
+      }, item.status === 4 || item.status === 5 || item.status === 7 ? {
+        w: common_vendor.o(($event) => $options.handleUserDelete(item.id), item.id)
+      } : {}, {
+        x: item.id
       });
     }),
     c: $options.filteredBookings.length === 0

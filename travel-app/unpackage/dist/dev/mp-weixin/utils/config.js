@@ -1,7 +1,8 @@
 "use strict";
 const config = {
   // 后端 API 基础地址
-  baseUrl: "http://192.168.5.10:8080",
+  // baseUrl: 'http://10.148.32.54:8080',
+  baseUrl: "http://192.168.137.1:8080",
   // 统一图片路径处理
   getImgUrl(url) {
     if (!url)

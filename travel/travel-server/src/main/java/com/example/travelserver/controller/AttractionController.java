@@ -1,5 +1,6 @@
 package com.example.travelserver.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.travelserver.entity.Attraction;
 import com.example.travelserver.entity.Food;
 import com.example.travelserver.entity.Hotel;
@@ -7,7 +8,9 @@ import com.example.travelserver.service.IAttractionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/attraction")
@@ -30,8 +33,12 @@ public class AttractionController {
     @GetMapping("/list")
     public List<Attraction> list(@RequestParam(required = false) String categoryIds) {
         if (categoryIds != null && !categoryIds.isEmpty()) {
-            String[] ids = categoryIds.split(",");
-            return attractionService.lambdaQuery().in(Attraction::getCategoryId, (Object[]) ids).list();
+            String[] idStrings = categoryIds.split(",");
+            Integer[] ids = new Integer[idStrings.length];
+            for (int i = 0; i < idStrings.length; i++) {
+                ids[i] = Integer.parseInt(idStrings[i].trim());
+            }
+            return attractionService.lambdaQuery().in(Attraction::getCategoryId, ids).list();
         }
         return attractionService.list();
     }
@@ -78,5 +85,47 @@ public class AttractionController {
         return attractionService.lambdaQuery()
                 .eq(Attraction::getCategoryId, categoryId)
                 .list();
+    }
+
+    // ==================== 超级管理员管理接口 ====================
+
+    /**
+     * 获取景点列表（管理端-分页）
+     */
+    @GetMapping("/admin/list")
+    public Map<String, Object> adminList(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        Page<Attraction> pageResult = attractionService.page(new Page<>(page, pageSize));
+        
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", pageResult.getRecords());
+        result.put("total", pageResult.getTotal());
+        
+        return result;
+    }
+
+    /**
+     * 添加景点
+     */
+    @PostMapping("/add")
+    public boolean add(@RequestBody Attraction attraction) {
+        return attractionService.save(attraction);
+    }
+
+    /**
+     * 更新景点
+     */
+    @PostMapping("/update")
+    public boolean update(@RequestBody Attraction attraction) {
+        return attractionService.updateById(attraction);
+    }
+
+    /**
+     * 删除景点
+     */
+    @DeleteMapping("/{id}")
+    public boolean delete(@PathVariable Integer id) {
+        return attractionService.removeById(id);
     }
 }

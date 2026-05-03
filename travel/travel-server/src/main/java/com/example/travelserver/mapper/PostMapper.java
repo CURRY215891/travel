@@ -9,15 +9,22 @@ import java.util.List;
 @Mapper
 public interface PostMapper extends BaseMapper<Post> {
 
-    // 1. 用于社交列表页：查询所有动态及其用户信息
+    // 1. 用于社交列表页：查询所有动态及其用户信息（只显示已通过审核的）
     @Select("SELECT p.*, u.nickname, u.avatar FROM post p " +
             "LEFT JOIN user u ON p.user_id = u.id " +
+            "WHERE p.audit_status = 1 " +
             "ORDER BY p.create_time DESC")
     List<Post> selectPostWithUser();
 
-    // 2. 新增：用于动态详情页：根据 ID 查询单条动态及其用户信息
+    // 2. 新增：用于动态详情页：根据 ID 查询单条动态及其用户信息（只显示已通过审核的）
     @Select("SELECT p.*, u.nickname, u.avatar FROM post p " +
             "LEFT JOIN user u ON p.user_id = u.id " +
-            "WHERE p.id = #{id}")
+            "WHERE p.id = #{id} AND p.audit_status = 1")
     Post selectPostWithUserById(Long id);
+
+    // 3. 用于管理员审核：查询所有动态及其用户信息（包含所有审核状态）
+    @Select("SELECT p.*, u.nickname, u.avatar FROM post p " +
+            "LEFT JOIN user u ON p.user_id = u.id " +
+            "ORDER BY p.create_time DESC")
+    List<Post> selectAllPostWithUser();
 }

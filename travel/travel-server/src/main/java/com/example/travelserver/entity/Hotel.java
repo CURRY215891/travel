@@ -23,6 +23,7 @@ public class Hotel {
     @TableField("star_level")
     private Integer starLevel;
     private String facilities;
+    private String tags;
     private String latitude;
     private String longitude;
 }

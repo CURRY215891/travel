@@ -19,7 +19,9 @@ const _sfc_main = {
       currentCity: "定位中...",
       searchKeyword: "",
       searchResults: [],
-      showSuggestions: false
+      showSuggestions: false,
+      currentLat: null,
+      currentLng: null
     };
   },
   onLoad() {
@@ -41,14 +43,43 @@ const _sfc_main = {
       common_vendor.index.getLocation({
         type: "wgs84",
         success: (res) => {
+          common_vendor.index.__f__("log", "at pages/index/index.vue:111", "获取当前位置成功:", res);
+          this.currentLat = res.latitude;
+          this.currentLng = res.longitude;
           setTimeout(() => {
-            this.currentCity = "邯郸市";
+            this.currentCity = "石家庄市";
           }, 1e3);
+          this.calculateAllDistances();
         },
         fail: (err) => {
-          this.currentCity = "邯郸市";
-          common_vendor.index.__f__("log", "at pages/index/index.vue:117", "定位失败", err);
+          this.currentCity = "石家庄市";
+          common_vendor.index.__f__("log", "at pages/index/index.vue:127", "定位失败", err);
         }
+      });
+    },
+    getDistance(lat1, lng1, lat2, lng2) {
+      const radLat1 = lat1 * Math.PI / 180;
+      const radLat2 = lat2 * Math.PI / 180;
+      const a = radLat1 - radLat2;
+      const b = lng1 * Math.PI / 180 - lng2 * Math.PI / 180;
+      let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+      s = s * 6378.137;
+      return s;
+    },
+    calculateAllDistances() {
+      if (!this.currentLat || !this.currentLng)
+        return;
+      this.attractions = this.attractions.map((item) => {
+        if (item.latitude && item.longitude) {
+          const dist = this.getDistance(
+            this.currentLat,
+            this.currentLng,
+            parseFloat(item.latitude),
+            parseFloat(item.longitude)
+          );
+          item.distance = dist > 1 ? dist.toFixed(1) + "km" : (dist * 1e3).toFixed(0) + "m";
+        }
+        return item;
       });
     },
     getAttractions() {
@@ -68,6 +99,7 @@ const _sfc_main = {
               // 默认景点分类
             };
           });
+          this.calculateAllDistances();
         }
       });
     },
@@ -174,14 +206,18 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     }),
     o: common_vendor.f($data.attractions, (item, k0, i0) => {
-      return {
+      return common_vendor.e({
         a: $options.formatImg(item.mainImage) || "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400",
         b: common_vendor.t(item.name),
-        c: common_vendor.t(item.price || "0"),
-        d: common_vendor.t($options.getPriceUnit(item.categoryId)),
-        e: item.id,
-        f: common_vendor.o(($event) => $options.goDetail(item.id), item.id)
-      };
+        c: item.distance
+      }, item.distance ? {
+        d: common_vendor.t(item.distance)
+      } : {}, {
+        e: common_vendor.t(item.price || "0"),
+        f: common_vendor.t($options.getPriceUnit(item.categoryId)),
+        g: item.id,
+        h: common_vendor.o(($event) => $options.goDetail(item.id), item.id)
+      });
     })
   });
 }

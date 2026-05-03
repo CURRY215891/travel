@@ -17,6 +17,7 @@ if (!Math) {
   "./pages/room-detail/room-detail.js";
   "./pages/my-bookings/my-bookings.js";
   "./pages/booking-order/booking-order.js";
+  "./pages/payment/payment.js";
   "./pages/hotel-review/hotel-review.js";
 }
 const _sfc_main = {

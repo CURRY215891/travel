@@ -25,7 +25,7 @@ const _sfc_main = {
         url: utils_config.config.baseUrl + "/hotel-room/list",
         data: { hotelId },
         success: (res) => {
-          this.roomList = res.data;
+          this.roomList = res.data.list || res.data || [];
         }
       });
     },
@@ -132,22 +132,31 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     d: $data.isFav ? "#ff5a5f" : "#ccc",
     e: common_vendor.o((...args) => $options.toggleFav && $options.toggleFav(...args)),
     f: common_vendor.t($data.info.minPrice || $data.info.price || 0),
-    g: $data.info.starLevel
+    g: $data.info.tags
+  }, $data.info.tags ? {
+    h: common_vendor.f($data.info.tags.split(","), (tag, index, i0) => {
+      return {
+        a: common_vendor.t(tag),
+        b: index
+      };
+    })
+  } : {}, {
+    i: $data.info.starLevel
   }, $data.info.starLevel ? {
-    h: common_vendor.t($data.info.starLevel)
+    j: common_vendor.t($data.info.starLevel)
   } : {}, {
-    i: $data.info.facilities
+    k: $data.info.facilities
   }, $data.info.facilities ? {
-    j: common_vendor.t($data.info.facilities)
+    l: common_vendor.t($data.info.facilities)
   } : {}, {
-    k: common_vendor.t($data.info.address || "查看地图"),
-    l: $data.distance
+    m: common_vendor.t($data.info.address || "查看地图"),
+    n: $data.distance
   }, $data.distance ? {
-    m: common_vendor.t($data.distance)
+    o: common_vendor.t($data.distance)
   } : {}, {
-    n: common_vendor.o((...args) => $options.openMap && $options.openMap(...args)),
-    o: common_vendor.t($data.info.description),
-    p: common_vendor.f($data.roomList, (room, k0, i0) => {
+    p: common_vendor.o((...args) => $options.openMap && $options.openMap(...args)),
+    q: common_vendor.t($data.info.description),
+    r: common_vendor.f($data.roomList, (room, k0, i0) => {
       return {
         a: $options.formatImg(room.image),
         b: common_vendor.t(room.name),
@@ -157,7 +166,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         f: common_vendor.o(($event) => $options.goRoomDetail(room.id), room.id)
       };
     }),
-    q: $data.roomList.length === 0
+    s: $data.roomList.length === 0
   }, $data.roomList.length === 0 ? {} : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);

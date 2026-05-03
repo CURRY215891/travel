@@ -24,4 +24,12 @@ public class HotelController {
     public Hotel getById(@PathVariable Integer id) {
         return hotelService.getById(id);
     }
+
+    /**
+     * 更新酒店信息
+     */
+    @PostMapping("/update")
+    public boolean update(@RequestBody Hotel hotel) {
+        return hotelService.updateById(hotel);
+    }
 }

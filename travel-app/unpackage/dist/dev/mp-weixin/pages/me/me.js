@@ -78,6 +78,7 @@ const _sfc_main = {
       }
     },
     loginByBackend(nickname, avatar) {
+      const existingUser = common_vendor.index.getStorageSync("userInfo");
       common_vendor.index.login({
         provider: "weixin",
         success: (loginRes) => {
@@ -86,9 +87,9 @@ const _sfc_main = {
             method: "POST",
             data: {
               code: loginRes.code,
-              // 携带 code 解决同名冲突漏洞
               nickname,
-              avatar
+              avatar,
+              userId: existingUser && existingUser.id ? existingUser.id : ""
             },
             success: (res) => {
               if (res.statusCode === 200 && res.data && res.data.id) {

@@ -91,6 +91,12 @@
 			}
 		},
 		{
+			"path": "pages/payment/payment",
+			"style": {
+				"navigationBarTitleText": "订单支付"
+			}
+		},
+		{
 			"path": "pages/hotel-review/hotel-review",
 			"style": {
 				"navigationBarTitleText": "酒店点评"

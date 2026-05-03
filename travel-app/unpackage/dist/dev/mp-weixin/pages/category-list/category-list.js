@@ -29,6 +29,9 @@ const _sfc_main = {
       return " /人起";
     },
     getTags(item) {
+      if (item.tags) {
+        return item.tags.split(",").filter((t) => t.trim() !== "");
+      }
       if (item.categoryId === 4)
         return ["老字号", "必吃榜"];
       if (item.categoryId === 2)

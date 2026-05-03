@@ -12,7 +12,7 @@ import java.util.UUID;
 public class UploadController {
 
     // 修改为你指定的路径，并在末尾加上斜杠
-    private final String uploadPath = "D:/bishe/travel-app/uploads/";
+    private final String uploadPath = "D:/bishe_files/uploads/";
 
     @PostMapping("/image")
     public String uploadImage(@RequestParam("file") MultipartFile file) {

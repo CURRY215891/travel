@@ -15,6 +15,7 @@
     "pages/room-detail/room-detail",
     "pages/my-bookings/my-bookings",
     "pages/booking-order/booking-order",
+    "pages/payment/payment",
     "pages/hotel-review/hotel-review"
   ],
   "window": {

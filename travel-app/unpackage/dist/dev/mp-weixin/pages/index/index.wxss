@@ -160,6 +160,11 @@
   font-size: 32rpx;
   font-weight: bold;
 }
+.attraction-card .info .distance {
+  font-size: 24rpx;
+  color: #007aff;
+  margin: 8rpx 0;
+}
 .attraction-card .info .tag {
   font-size: 20rpx;
   background: #eef5ff;
